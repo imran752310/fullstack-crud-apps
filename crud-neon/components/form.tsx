@@ -1,27 +1,53 @@
-// File: components/ContactForm.tsx
+
 'use client';
 
+import { error } from 'console';
 import React, { useState } from 'react';
 
 export default function ContactForm(){
 
     const[form, setForm] = useState({
-        email:" ", password: ""
+        name:" ", email: "", phone:" ", address: "", message: "",
+
     });
 
-    const handleChange = (e:React.ChangeEvent<HTMLInputElement>) =>{
-        setForm({...form, [e.target.name]})
+      // Handle input changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+    const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+  
+
+      try{
+        const res = await fetch('/api/record', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json'},
+          body : JSON.stringify(form),
+        });
+
+        if(res.ok){
+          alert("Message sent suffly")
+        }
+
+      }catch(error){
+
+      }
     }
 
 
-
   return (
-    <section className=" bg-gray-100 flex items-center justify-center px-4 py-10">
-      <div className= "w-[300px] mx-auto bg-white p-8 rounded-2xl shadow-xl  ">
+     <section className="bg-gray-100 flex items-center justify-center px-4 py-10">
+      <div className="w-[600px] mx-auto bg-white p-8 rounded-2xl shadow-xl">
         <h2 className="text-3xl font-bold text-center text-blue-600 mb-8">Get in Touch</h2>
 
-        <form onSubmit={handleSubmit} className=" space-y-6">
-          {/* Name */}
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
               Full Name
@@ -30,13 +56,14 @@ export default function ContactForm(){
               type="text"
               id="name"
               name="name"
+              value={form.name}
+              onChange={handleChange}
               placeholder="Enter your full name"
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
-          {/* Email */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
               Email Address
@@ -45,13 +72,14 @@ export default function ContactForm(){
               type="email"
               id="email"
               name="email"
+              value={form.email}
+              onChange={handleChange}
               placeholder="example@mail.com"
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
-          {/* Phone Number */}
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
               Phone Number
@@ -60,13 +88,14 @@ export default function ContactForm(){
               type="tel"
               id="phone"
               name="phone"
+              value={form.phone}
+              onChange={handleChange}
               placeholder="03XX-XXXXXXX"
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
-          {/* Address */}
           <div>
             <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
               Address
@@ -75,13 +104,14 @@ export default function ContactForm(){
               type="text"
               id="address"
               name="address"
+              value={form.address}
+              onChange={handleChange}
               placeholder="Street, City, ZIP"
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
-          {/* Message */}
           <div>
             <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
               Message
@@ -90,13 +120,14 @@ export default function ContactForm(){
               id="message"
               name="message"
               rows={4}
+              value={form.message}
+              onChange={handleChange}
               placeholder="Type your message here..."
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               required
             ></textarea>
           </div>
 
-          {/* Submit Button */}
           <div>
             <button
               type="submit"
