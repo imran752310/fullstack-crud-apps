@@ -1,9 +1,12 @@
-import Image from "next/image";
+import ContactForm from '@/components/form'
+import React from 'react'
 
-export default function Home() {
+const Home = () => {
   return (
     <div>
-      Home page Crude App In Neaon + Nexjs
+<ContactForm />
     </div>
-  );
+  )
 }
+
+export default Home
