@@ -1,18 +1,20 @@
+"use client";
 
-'use client';
+import React, { useState } from "react";
 
-import { error } from 'console';
-import React, { useState } from 'react';
+export default function ContactForm() {
+  const [form, setForm] = useState({
+    name: " ",
+    email: "",
+    phone: " ",
+    address: "",
+    message: "",
+  });
 
-export default function ContactForm(){
-
-    const[form, setForm] = useState({
-        name:" ", email: "", phone:" ", address: "", message: "",
-
-    });
-
-      // Handle input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  // Handle input changes
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
@@ -20,36 +22,42 @@ export default function ContactForm(){
     }));
   };
 
-    const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  
+    try {
+      const res = await fetch("/api/record", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
 
-      try{
-        const res = await fetch('/api/record', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json'},
-          body : JSON.stringify(form),
+      if (res.ok) {
+        alert("Message sent suffly");
+        setForm({
+          name: "",
+          email: "",
+          phone: "",
+          address: "",
+          message: "",
         });
-
-        if(res.ok){
-          alert("Message sent suffly")
-        }
-
-      }catch(error){
-
       }
-    }
-
+    } catch (error) {}
+  };
 
   return (
-     <section className="bg-gray-100 flex items-center justify-center px-4 py-10">
+    <section className="bg-gray-100 flex items-center justify-center px-4 py-10">
       <div className="w-[600px] mx-auto bg-white p-8 rounded-2xl shadow-xl">
-        <h2 className="text-3xl font-bold text-center text-blue-600 mb-8">Get in Touch</h2>
+        <h2 className="text-3xl font-bold text-center text-blue-600 mb-8">
+          Get in Touch
+        </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Full Name
             </label>
             <input
@@ -65,7 +73,10 @@ export default function ContactForm(){
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Email Address
             </label>
             <input
@@ -81,7 +92,10 @@ export default function ContactForm(){
           </div>
 
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="phone"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Phone Number
             </label>
             <input
@@ -97,7 +111,10 @@ export default function ContactForm(){
           </div>
 
           <div>
-            <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="address"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Address
             </label>
             <input
@@ -113,7 +130,10 @@ export default function ContactForm(){
           </div>
 
           <div>
-            <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="message"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Message
             </label>
             <textarea
@@ -140,5 +160,4 @@ export default function ContactForm(){
       </div>
     </section>
   );
-};
-
+}
