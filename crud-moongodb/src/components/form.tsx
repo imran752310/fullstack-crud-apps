@@ -41,8 +41,15 @@ const Form = () => {
     e.preventDefault();
     alert(form.address)
     try {
-      console.log("Form submitted:", form);
-      // You can send `form` to your API here
+    const res = await fetch("/api/record/", {
+        method: "POST",
+        headers: {"Content-type": "application/json"},
+        body: JSON.stringify(form),
+    })
+
+    // if(res){
+    //     alert("message data send",)
+    // }
     } catch (error) {
       console.error("Submission error:", error);
     }
