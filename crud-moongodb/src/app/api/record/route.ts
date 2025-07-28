@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
 // }
 
 
-export async function GET() {
+export async function GET(req: NextRequest, {params}: {params : {_id: string}}) {
   try{
     await connectMongoDB();
     const recods = await User.find().sort({ createdAt: -1})

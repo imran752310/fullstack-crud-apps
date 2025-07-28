@@ -14,6 +14,17 @@ type RecordType = {
 };
 
 const RecordTable = () => {
+
+    const [form, setForm] = useState({
+    id: "",
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    message: "",
+    createdAt: "",
+  });
+
   const [records, setRecords] = useState<RecordType[]>([]);
 
   useEffect(() => {
@@ -27,8 +38,21 @@ const RecordTable = () => {
   }, []);
 
     const handleDelete = async (_id: string) => {
-  const confirmed = confirm("Are you sure you want to delete this record?:");
-  if (!confirmed) return;
+ 
+    try {
+      const res = await fetch(`/api/record/${_id}`);
+      // const data = await res.json();
+      const data = await res.json();
+
+      if (res.ok) {
+        setForm(data.data);
+        alert(`Fetched record: ${JSON.stringify(data.data)}`);
+      } else {
+        alert(`Failed to fetch record: ${data.message}`);
+      }
+    } catch (error) {
+      console.error("Error fetching record:", error);
+    } 
 
 }
 
