@@ -40,7 +40,7 @@ const RecordTable = () => {
     const handleDelete = async (_id: string) => {
  
     try {
-      const res = await fetch(`/api/record/${_id}`);
+      const res = await fetch(`/api/record/${_id}`,);
       // const data = await res.json();
       const data = await res.json();
 
