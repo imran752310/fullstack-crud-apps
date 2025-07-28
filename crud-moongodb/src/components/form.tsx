@@ -1,6 +1,7 @@
 "use client"; // Needed if this is in a Next.js Server Component file
 
 import React, { useState } from "react";
+import RecordTable from "./table";
 
 type RecordData = {
   id: string;
@@ -46,7 +47,15 @@ const Form = () => {
         body: JSON.stringify(form),
     })
     if(res){
-        alert(" data send")
+        alert(" data send"),
+        setForm({
+          name: "",
+          email: "",
+          phone: "",
+          address: "",
+          message: "",
+        });
+
     }
     } catch (error) {
       console.error("Submission error:", error);
@@ -54,10 +63,10 @@ const Form = () => {
   };
 
   return (
-   <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
+   <div className="">
   <form
     onSubmit={handleSubmit}
-    className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md space-y-6"
+    className="w-[60%] mx-auto bg-white shadow-lg rounded-xl p-8   space-y-6"
   >
     <h2 className="text-2xl font-bold text-center text-gray-800">Contact Form</h2>
 
@@ -140,109 +149,10 @@ const Form = () => {
       </button>
     </div>
   </form>
+  <RecordTable />
 </div>
 
   );
 };
 
 export default Form;
-
-
-
-// import React, { useState } from 'react'
-
-
-// type RecordData = {
-// id: string;
-//   name: string;
-//   email: string;
-//   phone: string;
-//   address: string;
-//   message: string;
-//   createdAt: string;
-// }
-
-// const form = () => {
-//     // use for get data from frorm 
-//     const [form, SetForm] = useState({
-//     name: " ",
-//     email: " ",
-//     phone: " ",
-//     address: " ",
-//     message: " ",
-//     })
-//     // onchange input form data use for update 
-//     const [record, SetRecord] = useState<RecordData[]>([]);
-
-//     const handleChange = (
-//         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-//     ) => {
-//         const{name, value} = e.target;
-//         SetForm((prev) => ({
-//             ...prev,
-//             [name]: value
-//         }));
-//     };
-
-
-//     const handleSubmit = async (e: React.FormEvent<HTMLInputElement>)=>{
-//         e.preventDefault();
-//         try{
-
-//         }catch(error){
-
-//         }
-    
-// }
-//   return (
-//     <div>
-//         <form onSubmit={handleSubmit}>
-//             <div>
-//                 <label htmlFor="">Name</label>
-//                 <input 
-//                 name='name' 
-//                 value={form.name}
-//                 onChange={handleChange} 
-//                 placeholder='enter your name' />
-//             </div>
-//                         <div>
-//                 <label htmlFor="">Email</label>
-//                 <input 
-//                 name='email' 
-//                 value={form.email}
-//                   onChange={handleChange} 
-//                 placeholder='enter your Email' />
-//             </div>
-//                         <div>
-//                 <label htmlFor="">Phone</label>
-//                 <input 
-//                 name='phone' 
-//                 value={form.phone}
-//                   onChange={handleChange} 
-//                 placeholder='enter your Phone Number' />
-//             </div>
-//             <div>
-//                 <label htmlFor="">Address</label>
-//                 <input 
-//                 name='address' 
-//                 value={form.address}
-//                   onChange={handleChange} 
-//                 placeholder='enter your Address' />
-//             </div>
-//                         <div>
-//                 <label htmlFor="">message</label>
-//                 <input 
-//                 name='message' 
-//                 value={form.message}
-//                   onChange={handleChange} 
-//                 placeholder='enter your Message' />
-//             </div>
-//             <div>
-//                 <button type='submit'>Submit</button>
-//             </div>
-//         </form>
-//     </div>
-//   )
-// }
-
-// export default form

@@ -23,3 +23,24 @@ export async function POST(req: NextRequest) {
   }
 }
 
+
+// export async function GET() {
+//   try {
+//     await connectMongoDB();
+//     const records = await User.find().sort({ createdAt: -1 });
+//     return NextResponse.json(records);
+//   } catch (error) {
+//     return NextResponse.json({ message: "Failed to fetch records" }, { status: 500 });
+//   }
+// }
+
+
+export async function GET() {
+  try{
+    await connectMongoDB();
+    const recods = await User.find().sort({ createdAt: -1})
+    return NextResponse.json(recods)
+  }catch(error) {
+    return NextResponse.json({message: "Faild fetch record"}, { status: 500 });
+  }
+}
