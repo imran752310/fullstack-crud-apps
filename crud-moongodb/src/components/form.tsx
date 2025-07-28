@@ -39,17 +39,15 @@ const Form = () => {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert(form.address)
     try {
     const res = await fetch("/api/record/", {
         method: "POST",
         headers: {"Content-type": "application/json"},
         body: JSON.stringify(form),
     })
-
-    // if(res){
-    //     alert("message data send",)
-    // }
+    if(res){
+        alert(" data send")
+    }
     } catch (error) {
       console.error("Submission error:", error);
     }

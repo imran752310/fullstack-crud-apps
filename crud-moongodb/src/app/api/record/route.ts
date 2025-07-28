@@ -4,7 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    await connectMongoDB(); // Always connect to DB first
+     await connectMongoDB(); // Always connect to DB first
+  
 
     const body = await req.json();
     const { name, email, phone, address, message } = body;
@@ -22,21 +23,3 @@ export async function POST(req: NextRequest) {
   }
 }
 
-
-// import { User } from "@/lib/models/User";
-// import { NextRequest,NextResponse } from "next/server";
-
-
-// export async function POST(req: NextRequest) {
-//     try{
-
-//         const body = await req.json();
-//         const { name, email, phone, address, message } = body;
-//         const Products = new User({ name, email, phone, address, message });
-//       await Products.save();
-
-// return NextResponse.json("data interst")
-//     }catch(error){
-
-//     }
-// }
