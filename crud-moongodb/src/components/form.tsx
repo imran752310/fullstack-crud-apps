@@ -1,6 +1,6 @@
 "use client"; // Needed if this is in a Next.js Server Component file
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import RecordTable from "./table";
 
 type RecordData = {
@@ -41,11 +41,18 @@ const Form = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+
+      
     const res = await fetch("/api/record/", {
         method: "POST",
         headers: {"Content-type": "application/json"},
         body: JSON.stringify(form),
     })
+ useEffect(() => {
+  
+    
+  }, []);
+  
     if(res){
         alert(" data send"),
         setForm({

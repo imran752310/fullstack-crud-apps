@@ -37,24 +37,31 @@ const RecordTable = () => {
     fetchRecords();
   }, []);
 
-    const handleDelete = async (_id: string) => {
- 
-    try {
-      const res = await fetch(`/api/record/${_id}`,);
-      // const data = await res.json();
-      const data = await res.json();
+const handleDelete = async (_id: string) => {
+  const confirmed = confirm("Are you sure you want to delete this record?");
+  if (!confirmed) return;
+  const id = _id;
+  try {
+    const res = await fetch(`/api/record/${id}`, {
+      method: "DELETE",
+    });
 
-      if (res.ok) {
-        setForm(data.data);
-        alert(`Fetched record: ${JSON.stringify(data.data)}`);
-      } else {
-        alert(`Failed to fetch record: ${data.message}`);
-      }
-    } catch (error) {
-      console.error("Error fetching record:", error);
-    } 
+    const data = await res.json();
 
-}
+    if (res.ok) {
+      alert(data.message || "Record deleted successfully");
+
+      // Remove deleted record from state
+      setRecords((prev) => prev.filter((record) => record._id !== _id));
+    } else {
+      alert(`Failed to delete record: ${data.message}`);
+    }
+  } catch (error) {
+    console.error("Error deleting record:", error);
+    alert("Something went wrong while deleting the record.");
+  }
+};
+
 
     function handleEdit(_id: string): void {
        const confirmed = confirm("Are you sure you want to Update this record?:");
@@ -88,7 +95,8 @@ const RecordTable = () => {
                 <td className="py-2 px-4 border">{new Date(record.createdAt).toLocaleString()}</td>
                 <td>
                     <button 
-                     onClick={() => handleDelete(record._id)}
+                     onClick={() => handleDelete(
+                      record._id)}
                     className="bg-red-500 text-white px-3 py-2">Delete</button>
                     <button 
                      onClick={() => handleEdit(record._id)}
