@@ -63,9 +63,10 @@ const handleDelete = async (_id: string) => {
 };
 
 
-    function handleEdit(_id: string): void {
-       const confirmed = confirm("Are you sure you want to Update this record?:");
-  if (!confirmed) return;
+    async function handleEdit(_id: string): Promise<void> {
+         const res = await fetch(`/api/record/${_id}`, {
+      method: "DELETE",
+    });
     }
 
   return (
