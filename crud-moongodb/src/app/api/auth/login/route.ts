@@ -11,6 +11,12 @@ export async function GET(request: Request) {
 export async function POST(request: NextRequest) {
   const body = await request.json();
   const { email, password } = body;
+  
+  console.log(email);
+  console.log(password);
+
+
+
 
   try {
     const user = await User.findOne({ email });
@@ -54,5 +60,10 @@ export async function POST(request: NextRequest) {
       user: user,
       token: token,
     });
-  } catch (error) {}
+  } catch (error) {
+     return NextResponse.json({
+      message: "user Logged in error",
+     
+    });
+  }
 }

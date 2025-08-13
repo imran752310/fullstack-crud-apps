@@ -1,4 +1,4 @@
-import { User } from "@/lib/models/User";
+import { Record } from "@/lib/models/Record";
 import { connectMongoDB } from "@/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { name, email, phone, address, message } = body;
 
-    const newUser = new User({ name, email, phone, address, message, createdAt: new Date() });
+    const newUser = new Record({ name, email, phone, address, message, createdAt: new Date() });
     await newUser.save();
 
     return NextResponse.json({ message: "Data inserted successfully", data: newUser }, { status: 201 });
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest, {params}: {params : {_id: string}}) {
   try{
     await connectMongoDB();
-    const recods = await User.find().sort({ createdAt: -1})
+    const recods = await Record.find().sort({ createdAt: -1})
     return NextResponse.json(recods)
   }catch(error) {
     return NextResponse.json({message: "Faild fetch record"}, { status: 500 });

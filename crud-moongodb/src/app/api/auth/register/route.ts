@@ -5,21 +5,22 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
-export async function GET(request: NextRequest, response: NextResponse) {
+export async function GET(request: NextRequest) {
   await connectMongoDB();
   return NextResponse.json({ message: "Register Route is here" });
 }
 
-export async function POST(request: NextRequest, response: NextResponse) {
+export async function POST(request: NextRequest) {
   await connectMongoDB();
   const body = await request.json();
   const { name, email, password } = body;
+
   try {
-    const user = await User.findOne({ email });
-    if (user) {
-      console.log("user already exist", user);
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      console.log("User already exists", existingUser);
       return NextResponse.json(
-        { message: "User already Exist" },
+        { message: "User already exists" },
         { status: 400 }
       );
     }
@@ -27,10 +28,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
 
-    const payload = {
-      name: name,
-      email: email,
-    };
+    const payload = { name, email };
     const JWT_SECRET = "myjwtsecret";
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
 
@@ -40,44 +38,48 @@ export async function POST(request: NextRequest, response: NextResponse) {
       maxAge: 60 * 60 * 24 * 7, // 1 week
     });
 
-    (await cookieStore).set("userId", user._id, {
-      httpOnly: true,
-      maxAge: 60 * 60 * 24 * 7, // 1 week
-    });
-
     const newUser = new User({
       name,
       email,
       password: hashedPassword,
-      // token,
     });
 
-    const addUser = await newUser.save();
-    console.log("new user added ", addUser);
+    const savedUser = await newUser.save();
+    console.log("New user added", savedUser);
 
     return NextResponse.json({
-      message: "user added successfully",
-      user: addUser,
-      // token: token,
+      message: "User added successfully",
+      user: savedUser,
     });
   } catch (error) {
-    NextResponse.json({ message: "Error", error: error }, { status: 400 });
+    console.error("Error registering user:", error);
+    return NextResponse.json(
+      { message: "Error", error: String(error) },
+      { status: 500 }
+    );
   }
 }
+
+
+
 
 // import User from "@/lib/models/User";
 // import { connectMongoDB } from "@/lib/mongodb";
 // import bcryptjs from "bcryptjs";
 // import { cookies } from "next/headers";
 // import { NextRequest, NextResponse } from "next/server";
+// import jwt from "jsonwebtoken";
+
+// export async function GET(request: NextRequest, response: NextResponse) {
+//   await connectMongoDB();
+//   return NextResponse.json({ message: "Register Route is here" });
+// }
 
 // export async function POST(request: NextRequest, response: NextResponse) {
-//     await connectMongoDB();
-//     const body = await request.json();
-//     const {name, email, password} = body;
-    
-//     // check Email duplication 
-// try {
+//   await connectMongoDB();
+//   const body = await request.json();
+//   const { name, email, password } = body;
+//   try {
 //     const user = await User.findOne({ email });
 //     if (user) {
 //       console.log("user already exist", user);
@@ -87,10 +89,10 @@ export async function POST(request: NextRequest, response: NextResponse) {
 //       );
 //     }
 
-//     const salt = await bcryptjs.genSalt(10)
-// const hashedPassword = await bcryptjs.hash(password, salt);
-// console.log(hashedPassword)
-//  const payload = {
+//     const salt = await bcryptjs.genSalt(10);
+//     const hashedPassword = await bcryptjs.hash(password, salt);
+
+//     const payload = {
 //       name: name,
 //       email: email,
 //     };
@@ -98,12 +100,12 @@ export async function POST(request: NextRequest, response: NextResponse) {
 //     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
 
 //     const cookieStore = cookies();
-//     cookieStore.set("token", token, {
+//     (await cookieStore).set("token", token, {
 //       httpOnly: true,
 //       maxAge: 60 * 60 * 24 * 7, // 1 week
 //     });
 
-//     cookieStore.set("userId", user._id, {
+//     (await cookieStore).set("userId", user._id, {
 //       httpOnly: true,
 //       maxAge: 60 * 60 * 24 * 7, // 1 week
 //     });
@@ -112,7 +114,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
 //       name,
 //       email,
 //       password: hashedPassword,
-//       token,
+//       // token,
 //     });
 
 //     const addUser = await newUser.save();
@@ -121,9 +123,72 @@ export async function POST(request: NextRequest, response: NextResponse) {
 //     return NextResponse.json({
 //       message: "user added successfully",
 //       user: addUser,
-//       token: token,
+//       // token: token,
 //     });
 //   } catch (error) {
 //     NextResponse.json({ message: "Error", error: error }, { status: 400 });
 //   }
 // }
+
+// // import User from "@/lib/models/User";
+// // import { connectMongoDB } from "@/lib/mongodb";
+// // import bcryptjs from "bcryptjs";
+// // import { cookies } from "next/headers";
+// // import { NextRequest, NextResponse } from "next/server";
+
+// // export async function POST(request: NextRequest, response: NextResponse) {
+// //     await connectMongoDB();
+// //     const body = await request.json();
+// //     const {name, email, password} = body;
+    
+// //     // check Email duplication 
+// // try {
+// //     const user = await User.findOne({ email });
+// //     if (user) {
+// //       console.log("user already exist", user);
+// //       return NextResponse.json(
+// //         { message: "User already Exist" },
+// //         { status: 400 }
+// //       );
+// //     }
+
+// //     const salt = await bcryptjs.genSalt(10)
+// // const hashedPassword = await bcryptjs.hash(password, salt);
+// // console.log(hashedPassword)
+// //  const payload = {
+// //       name: name,
+// //       email: email,
+// //     };
+// //     const JWT_SECRET = "myjwtsecret";
+// //     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
+
+// //     const cookieStore = cookies();
+// //     cookieStore.set("token", token, {
+// //       httpOnly: true,
+// //       maxAge: 60 * 60 * 24 * 7, // 1 week
+// //     });
+
+// //     cookieStore.set("userId", user._id, {
+// //       httpOnly: true,
+// //       maxAge: 60 * 60 * 24 * 7, // 1 week
+// //     });
+
+// //     const newUser = new User({
+// //       name,
+// //       email,
+// //       password: hashedPassword,
+// //       token,
+// //     });
+
+// //     const addUser = await newUser.save();
+// //     console.log("new user added ", addUser);
+
+// //     return NextResponse.json({
+// //       message: "user added successfully",
+// //       user: addUser,
+// //       token: token,
+// //     });
+// //   } catch (error) {
+// //     NextResponse.json({ message: "Error", error: error }, { status: 400 });
+// //   }
+// // }

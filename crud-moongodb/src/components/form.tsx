@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import RecordTable from "./table";
+import Link from "next/link";
+import LogoutButton from "./Logout";
 
 type RecordData = {
   id: string;
@@ -71,6 +73,8 @@ const Form = () => {
 
   return (
    <div className="">
+<Link href="/profile">Profile</Link>
+<LogoutButton />
   <form
     onSubmit={handleSubmit}
     className="w-[60%] mx-auto bg-white shadow-lg rounded-xl p-8   space-y-6"
